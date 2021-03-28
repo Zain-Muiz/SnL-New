@@ -25,34 +25,47 @@ var myGameArea = {
         this.context.fillRect(40,40,1,1);
         const board = [];
         let position = 1;
-        const ladders = [{
-          start: 2,
-          end: 22
-        },{
-          start: 50,
-          end: 34
-        },{
-          start: 10,
-          end: 44
-        },{
-          start: 61,
-          end: 19
-        },{
-          start: 70,
-          end: 83
-        },{
-          start:78,
-          end: 4
-        }];
         
-        for (var y = myBackground.height - 70; y >= 43; y-=58.7) {
+      // if (myGamePiece.position === position) {
+      //   const diff = myGamePiece.position - position;
+      //   myGamePiecePosition = position - diff;
+      // }
+        let count = 1;
+        let check = false;
+        for (var y = myBackground.height - 70; y >= 43; y-=61.4) {
           let row = [];
+          
+          
           
           board.push(row);
           for (var x = 43; x < myBackground.width - 70; x+=61.4) {
             
-            row.push({x,y,occupied:null,position});
-            position ++;
+            
+            if(count <= 10){
+              if(check){
+                position+=11;
+                check = false; 
+              }
+              row.push({x,y,occupied:null,position});
+              position ++;
+              count++;
+            }
+            if (count > 10){
+              if(count == 11){
+              position+=9;
+              count++;
+              break;
+              }
+              row.push({x,y,occupied:null,position});
+              position --;
+              count++;
+              if(count == 22){
+                count = 1;
+                check = true;
+              }
+
+            }
+
           }
         }
         console.log(board)
@@ -62,7 +75,7 @@ var myGameArea = {
                  x: e.clientX,
                  y: e.clientY
                };
-               console.log("this is" + pos.x , pos.y);
+               //console.log("this is" + pos.x , pos.y);
                  if (isIntersect(pos, myDice)) {
                    rollDie(board);
                    //alert('click on dice');
@@ -75,6 +88,7 @@ var myGameArea = {
     stop : function() {
         clearInterval(this.interval);
     }
+    
     
 }
 
@@ -141,6 +155,7 @@ function move(roll,board) {
         //console.log(myGamePiece.x);
         myGamePiece.x = newCords[0].x + 10.2  ;
         myGamePiece.y = newCords[0].y - 29.3;
+        checkSnakeorLadder(board);
         //console.log(myGamePiece.x);
         }
     updateGameArea();
@@ -156,9 +171,9 @@ function clearmove() {
 }
 
 function isIntersect(pos, myDice) {
-    console.log("hey");
-    console.log(pos.y);
-    console.log(myDice.y);
+   // console.log("hey");
+    //console.log(pos.y);
+    //console.log(myDice.y);
     if (pos.x > myDice.x && pos.x < myDice.x + 70 && pos.y < myDice.y + 70)
         return true;
     return false;
@@ -168,10 +183,117 @@ function isIntersect(pos, myDice) {
       //console.log(board);
     const max = 6;
     const roll = Math.ceil(Math.random() * max);
-    console.log("You rolled", roll);
+    //console.log("You rolled", roll);
     newdice = "assets/dice"+ roll + ".jpg";
     //console.log(newdice);
     myDice.image.src = newdice;
     move(roll,board);
     
+    
   }
+
+  function checkSnakeorLadder(board){
+
+    const ladders = [
+      {
+      start: 3,
+      end: 60
+    },{
+      start: 6,
+      end: 27
+    },{
+      start: 11,
+      end: 70
+    },{
+      start: 35,
+      end: 56
+    },{
+      start: 63,
+      end: 96
+    },{
+      start:68,
+      end: 93
+    },
+      {
+      start: 37,
+      end: 1
+    },{
+      start: 25,
+      end: 5
+    },{
+      start: 47,
+      end: 12
+    },{
+      start: 65,
+      end: 59
+    },{
+      start: 82,
+      end: 61
+    },{
+      start:87,
+      end: 54
+    }
+    ,{
+      start:89,
+      end: 69
+    }
+  ];
+  ladders.forEach(ladder=>{
+    console.log(myGamePiece.playerpos)
+    ladCords = [];
+    if (ladder.start === myGamePiece.playerpos) {
+      console.log("You stepped on a ladder!");
+      if(ladder.start> ladder.end){
+      push_status(0, "Ladder");
+      }
+      if(ladder.start < ladder.end){
+      push_status(1, "Ladder");
+      }
+      myGamePiece.playerpos = ladder.end;
+      for( let tiles of board){
+        for( let tile of tiles){
+            if(tile.position == myGamePiece.playerpos){
+                ladCords.push(tile);
+                console.log(newCords);
+            }
+        }
+    }
+    myGamePiece.x = ladCords[0].x + 10.2  ;
+    myGamePiece.y = ladCords[0].y - 29.3;
+    }
+  });
+  
+  if (myGamePiece.playerpos === 100) {
+    push_status(1, "Player has won!");
+    console.log("Player has won!");
+    hasWon = true;
+  }
+
+  }
+
+  
+function push_status(status_code, message) {
+  let root = document.getElementById("status_msg");
+  root.className = "snackbar";
+  root.innerHTML = "";
+  let p = document.createElement("p");
+  p.class = "empty";
+  p.innerHTML = message;
+
+  if (status_code === 0) {
+      let b = document.createElement("b");
+      b.innerHTML = " Oh No! ";
+      b.style.color = "red";
+      root.appendChild(b);
+  } else if (status_code === 1) {
+      let b = document.createElement("b");
+      // let p = document.createElement("p");
+      b.innerHTML = "YAY! ";
+      b.style.color = "green";
+      root.appendChild(b);
+  }
+  root.appendChild(p);
+  setTimeout(function () {
+      root.className = "nothing";
+  }, 1000);
+}
