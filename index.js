@@ -8,17 +8,19 @@ var myBackground;
 // }
 
 function startGame() {
-    myGamePiece = new component(40, 40, "assets/icon_player1.png", 0, 630, 0 , "image");
-    myBackground = new component(600, 600, "Boardnew.jpeg", 0, 0, null, "image");
-    myDice = new component(70,70,"assets/dice1.jpg",0,800, null, "image");
+    myGamePiece = new component(40, 40, "assets/icon_player1.png", 0, 620, 0 , "image");
+    myBackground = new component(700, 700, "Boardnew.jpeg", 0, 0, null, "image");
+    myDice = new component(70,70,"assets/dice1.jpg",620,720, null, "image");
     mytest= new component(10,10,"blue",20,20,null,"shape")
     
-    myGameArea.start();
+    //myGameArea.start();
 }
 
-$(window).resize(function() {
+$(window).on('load resize', function () {
+  console.log("hey");
   window.wwidth = $(window).width();
   var wheight = $(window).height();
+  startGame();
   if(wwidth<700){
   myBackground.width = 700;
   myBackground.height = 700;
@@ -27,6 +29,9 @@ $(window).resize(function() {
   if(wwidth>700){
   myBackground.width = 600;
   myBackground.height = 600;
+  myGamePiece.y = 540;
+  myDice.x = 620;
+  myDice.y = 530;
   myGameArea.start();
   }
 
@@ -129,6 +134,11 @@ function component(width, height, color, x, y, playerpos, type) {
         this.image = new Image();
         this.image.src = color;
     }
+    if (type == "image1") {
+        this.image = new Image();
+        this.image.src = color;
+        //this.image.style = "border: 2px solid";
+    }
     
     this.width = width;
     this.height = height;
@@ -209,11 +219,11 @@ function clearmove() {
 
 function isIntersect(pos, myDice) {
    // console.log("hey");
-    console.log(pos.y);
-    console.log(myDice.y);
-    console.log(pos.x);
-    console.log(myDice.x);
-    if (pos.x > myDice.x && pos.x < myDice.x + 70 && pos.y < myDice.y + 70)
+    console.log("pos y",pos.y);
+    console.log("dice y", myDice.y);
+    console.log("pos x", pos.x);
+    console.log("dice x", myDice.x);
+    if (pos.x > myDice.x + 120 && pos.x < myDice.x + 190 && pos.y >myDice.y && pos.y < myDice.y+70)
         return true;
     return false;
   }
