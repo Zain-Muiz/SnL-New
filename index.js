@@ -1,21 +1,48 @@
 var myGamePiece;
 var myBackground;
 
+// window.onload = window.onresize = function() {
+//   var canvas = document.getElementById('canvas');
+//   canvas.width = window.innerWidth * 0.8;
+//   canvas.height = window.innerHeight * 0.8;
+// }
 
 function startGame() {
     myGamePiece = new component(40, 40, "assets/icon_player1.png", 0, 630, 0 , "image");
-    myBackground = new component(700, 700, "Boardnew.jpeg", 0, 0, null, "image");
+    myBackground = new component(600, 600, "Boardnew.jpeg", 0, 0, null, "image");
     myDice = new component(70,70,"assets/dice1.jpg",0,800, null, "image");
     mytest= new component(10,10,"blue",20,20,null,"shape")
     
     myGameArea.start();
 }
 
+$(window).resize(function() {
+  window.wwidth = $(window).width();
+  var wheight = $(window).height();
+  if(wwidth<700){
+  myBackground.width = 700;
+  myBackground.height = 700;
+  myGameArea.start();
+  }
+  if(wwidth>700){
+  myBackground.width = 600;
+  myBackground.height = 600;
+  myGameArea.start();
+  }
+
+
+ 
+});
+
 var myGameArea = {
-    canvas : document.createElement("canvas"),
+    canvas: document.createElement("canvas",{"id":"canvas"}),
+    
+    
     
     
     start : function() {
+        
+        var width = myBackground.width;  // also height
         this.canvas.width = 700;
         this.canvas.height = 900;
         this.context = this.canvas.getContext("2d");
@@ -25,21 +52,25 @@ var myGameArea = {
         this.context.fillRect(40,40,1,1);
         const board = [];
         let position = 1;
-        
-      // if (myGamePiece.position === position) {
-      //   const diff = myGamePiece.position - position;
-      //   myGamePiecePosition = position - diff;
-      // }
         let count = 1;
         let check = false;
-        for (var y = myBackground.height - 70; y >= 43; y-=61.4) {
-          let row = [];
-          
-          
-          
+        var widthbuff = width/10 ;          // also heightbuff
+        var widthstart = .0615 * width;
+        var allsquare = 2 * widthstart;
+        var persquare = width - allsquare;
+        var permove = persquare / 10  ;
+        console.log(widthbuff);
+        console.log(widthstart);
+        console.log(allsquare);
+        console.log(persquare);
+        console.log(permove);
+//        for (var y = myBackground.height - 70; y >= 43; y-=61.4) {
+        for (var y = width - widthbuff; y >= widthstart; y-=permove) {
+          let row = [];        
           board.push(row);
-          for (var x = 43; x < myBackground.width - 70; x+=61.4) {
-            
+//          for (var x = 43; x < myBackground.width - 70; x+=61.4) {
+          for (var x = widthstart; x < width - widthbuff; x+=permove) {
+            console.log("jjjj")
             
             if(count <= 10){
               if(check){
@@ -140,14 +171,20 @@ function move(roll,board) {
     if (roll) {//myGamePiece.speedX = 1;
         //console.log(board);
         newCords = []; 
-        newPos = myGamePiece.playerpos + roll;
+        let oldPos = myGamePiece.playerpos;
+        let newPos = myGamePiece.playerpos + roll;
+        if(newPos > 100){
+          push_status(0,"No Move. Try Again");
+          newPos = oldPos;
+        }
+        let diff = newPos - oldPos;
         myGamePiece.playerpos = newPos;
         //console.log(newPos);
         for( let tiles of board){
             for( let tile of tiles){
                 if(tile.position == newPos){
                     newCords.push(tile);
-                    console.log(newCords);
+                    //console.log(newCords);
                 }
             }
         }
@@ -172,8 +209,10 @@ function clearmove() {
 
 function isIntersect(pos, myDice) {
    // console.log("hey");
-    //console.log(pos.y);
-    //console.log(myDice.y);
+    console.log(pos.y);
+    console.log(myDice.y);
+    console.log(pos.x);
+    console.log(myDice.x);
     if (pos.x > myDice.x && pos.x < myDice.x + 70 && pos.y < myDice.y + 70)
         return true;
     return false;
@@ -239,12 +278,12 @@ function isIntersect(pos, myDice) {
     }
   ];
   ladders.forEach(ladder=>{
-    console.log(myGamePiece.playerpos)
+    //console.log(myGamePiece.playerpos)
     ladCords = [];
     if (ladder.start === myGamePiece.playerpos) {
       console.log("You stepped on a ladder!");
       if(ladder.start> ladder.end){
-      push_status(0, "Ladder");
+      push_status(0, "Snake");
       }
       if(ladder.start < ladder.end){
       push_status(1, "Ladder");
@@ -254,7 +293,7 @@ function isIntersect(pos, myDice) {
         for( let tile of tiles){
             if(tile.position == myGamePiece.playerpos){
                 ladCords.push(tile);
-                console.log(newCords);
+                //console.log(newCords);
             }
         }
     }
@@ -262,6 +301,7 @@ function isIntersect(pos, myDice) {
     myGamePiece.y = ladCords[0].y - 29.3;
     }
   });
+  
   
   if (myGamePiece.playerpos === 100) {
     push_status(1, "Player has won!");
