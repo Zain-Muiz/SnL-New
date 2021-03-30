@@ -228,11 +228,13 @@ function move(roll,newboard) {
         }
         //console.log(newCords[0].x);
         //console.log(myGamePiece.x);
-
+            var movepiecesound = new Audio('movepieceSINGLE.mp3');
             for(i=0; i < newCords.length; i++){
               console.log("hey");
               myGamePiece.x = newCords[i].x + 10.2  ;
               myGamePiece.y = newCords[i].y - 29.3;
+              movepiecesound.playbackRate = 2;
+              movepiecesound.play();
               await new Promise(resolve => setTimeout(resolve,750));
             }
           
@@ -255,14 +257,18 @@ function clearmove() {
 
 function isIntersect(pos, myDice) {
    // console.log("hey");
+   var diceroll = new Audio('dice.mp3');
      console.log("pos y",pos.y);
      console.log("dice y", myDice.y);
      console.log("pos x", pos.x);
      console.log("dice x", myDice.x);
     if(myBackground.width >600){
       console.log("mobile");
-      if (pos.x > myDice.x && pos.x < myDice.x + 70 && pos.y >myDice.y && pos.y < myDice.y+70)
-          return true;
+      if (pos.x > myDice.x && pos.x < myDice.x + 70 && pos.y >myDice.y && pos.y < myDice.y+70){
+        diceroll.play();  
+        return true;
+          
+      }
       else{
         return false;
       }
@@ -271,8 +277,11 @@ function isIntersect(pos, myDice) {
       console.log("desk");
       extracanvasspace = window.wwidth - 700;
       precanvasbuff = extracanvasspace / 2 ; 
-      if (pos.x > myDice.x + precanvasbuff && pos.x < myDice.x + precanvasbuff + 70 && pos.y >myDice.y && pos.y < myDice.y+70)
-          return true;
+      if (pos.x > myDice.x + precanvasbuff && pos.x < myDice.x + precanvasbuff + 70 && pos.y >myDice.y && pos.y < myDice.y+70){
+        diceroll.play();  
+        return true;
+          
+      }
       else {
         return false;
       }
@@ -345,15 +354,19 @@ function isIntersect(pos, myDice) {
       end: 69
     }
   ];
+  var laddersound = new Audio('Laddersound.mp3');
+  var snakesound = new Audio('SnakeOhno.mp3');
   ladders.forEach(ladder=>{
     //console.log(myGamePiece.playerpos)
     ladCords = [];
     if (ladder.start === myGamePiece.playerpos) {
       console.log("You stepped on a ladder!");
       if(ladder.start> ladder.end){
+      snakesound.play();
       push_status(0, "Snake");
       }
       if(ladder.start < ladder.end){
+      laddersound.play();
       push_status(1, "Ladder");
       }
       myGamePiece.playerpos = ladder.end;
