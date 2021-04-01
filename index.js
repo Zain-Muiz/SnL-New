@@ -228,12 +228,13 @@ function move(roll,newboard) {
         }
         //console.log(newCords[0].x);
         //console.log(myGamePiece.x);
-            var movepiecesound = new Audio('movepieceSINGLE.mp3');
+
+        var movepiecesound = new Audio('movepiece' + roll + '.mp3');
+           
             for(i=0; i < newCords.length; i++){
               console.log("hey");
               myGamePiece.x = newCords[i].x + 10.2  ;
               myGamePiece.y = newCords[i].y - 29.3;
-              movepiecesound.playbackRate = 2;
               movepiecesound.play();
               await new Promise(resolve => setTimeout(resolve,750));
             }
@@ -313,45 +314,60 @@ function isIntersect(pos, myDice) {
     const ladders = [
       {
       start: 3,
-      end: 60
+      end: 60,
+      message: "വോട്ടര്‍ പട്ടികയില്‍ ഞാന്‍ പേര്‌ ചേര്‍ത്തിട്ടുണ്ട്‌."
+
     },{
       start: 6,
-      end: 27
+      end: 27,
+      message:"വോട്ടവകാശത്തെക്കുറിച്ച്‌ ഞാന്‍ മറ്റുള്ളവരെ ബോധവത്ക്കരിക ്കും"
     },{
       start: 11,
-      end: 70
+      end: 70,
+      message:" വോട്ടവകാശം വിനിയോഗിക്കുന്നതുമായി ബന്ധപ്പെട്ട്‌ എന്തെങ്കിലും സംശയമുണ്ടെങ്കില്‍ ഞാന്‍ 1950 എന്ന നമ്പരില്‍ ബന്ധപ്പെടും"
     },{
       start: 35,
-      end: 56
+      end: 56,
+      message: "എന്തെങ്കിലും ക്രമക്കേട്‌ കണ്ടെത്തിയാല്‍ ഉടന്‍ തന്നെ ബസ്ധപ്പെട്ട അധികാരികളെ ഞാന്‍ അറിയികകും"
+      
     },{
       start: 63,
-      end: 96
+      end: 96,
+      message: "എന്റെ സഹപ്രവര്‍ത്തകരെ വോട്ടര്‍ പട്ടികയില്‍ പേരു ചേര്‍ക്കാന്‍ ഞാന്‍ സഹായിക ്കും"
     },{
       start:68,
-      end: 93
+      end: 93,
+      message: "കോവിഡ്‌ മാനദണ്ഡങ്ങള്‍ പാലിച്ചുകൊണ്ടു മാത്രമേ ഞാന്‍ വോട്ടുചെയൂ"
     },
       {
       start: 37,
-      end: 1
+      end: 1,
+      message:"മുതിര്‍ന്നവര്‍, ഭിന്നശേഷിക്കാര്‍, സ്ത്രീകള്‍ എന്നിവര്‍ക്ക്‌ ക്യൂവില്‍ നില്‍ക്കാതെ വോട്ട്‌ ചെയ്യുന്നതിന്‌ ഞാന്‍ മുന്‍ഗണന നല്‍കും"
     },{
       start: 25,
-      end: 5
+      end: 5,
+      message:""
     },{
       start: 47,
-      end: 12
+      end: 12,
+      message:""
     },{
       start: 65,
-      end: 59
+      end: 59,
+      message:""
     },{
       start: 82,
-      end: 61
+      end: 61,
+      message:""
     },{
       start:87,
-      end: 54
+      end: 54,
+      message:""
     }
     ,{
       start:89,
-      end: 69
+      end: 69,
+      message:""
     }
   ];
   var laddersound = new Audio('Laddersound.mp3');
@@ -397,6 +413,11 @@ function push_status(status_code, message) {
   let root = document.getElementById("status_msg");
   root.className = "snackbar";
   root.innerHTML = "";
+  let a =document.createElement("img");
+  //a = new Image();
+  //a.src = "assets/item_status_1.png";
+  //root.appendChild(a);
+
   let p = document.createElement("p");
   p.class = "empty";
   p.innerHTML = message;
@@ -416,5 +437,5 @@ function push_status(status_code, message) {
   root.appendChild(p);
   setTimeout(function () {
       root.className = "nothing";
-  }, 1000);
+  }, 100000);
 }

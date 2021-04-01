@@ -1,15 +1,23 @@
 
 .snackbar {
-    background-color: #222;
+    
+    
     padding: 10px;
     color: white;
     position: fixed;
     border-radius: 5px;
-    bottom: 5px;
+    bottom: 48%;
+    left: 14%;
     display: flex;
     font-size: 15px;
     margin: 15px;
   }
+
+.snackbar p{
+  position: absolute;
+  left: 45%;
+  bottom: 40%;
+}
   
   .empty {
     margin: 0;
