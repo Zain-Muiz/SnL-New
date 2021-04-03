@@ -225,9 +225,7 @@ function move(roll,newboard) {
                     console.log(newCords);
                 }}
             }
-        }
-        //console.log(newCords[0].x);
-        //console.log(myGamePiece.x);
+          }
 
         var movepiecesound = new Audio('movepiece' + roll + '.mp3');
            
@@ -245,9 +243,6 @@ function move(roll,newboard) {
         //console.log(myGamePiece.x);
         }});
     updateGameArea();
-    //if (dir == "down") {myGamePiece.speedY = 1; } 
-    //if (dir == "left") {myGamePiece.speedX = -1; }
-    //if (dir == "right") {myGamePiece.speedX = 1; }
 }
 
 function clearmove() {
