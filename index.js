@@ -9,7 +9,7 @@ var myBackground;
 
 function startGame() {
     myGamePiece = new component(40, 40, "assets/icon_player1.png", 0, 620, 0 , "image");
-    myBackground = new component(700, 700, "Boardnew.jpeg", 0, 0, null, "image");
+    myBackground = new component(700, 700, "assets/boards/boardmain.jpg", 0, 0, null, "image");
     myDice = new component(70,70,"assets/dice1.jpg",620,720, null, "image");
     mytest= new component(10,10,"blue",20,20,null,"shape")
     
