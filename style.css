@@ -66,3 +66,25 @@ button{
     top: 33%
   }
 }
+
+.footer {
+  background-color: #222;
+  font-family: monospace;
+  color: white;
+  position: fixed;
+  width: 100%;
+  left: -16px;
+  bottom: -35px;
+  font-size: 15px;
+  margin: 15px;
+}
+
+.footer h4{
+  text-align: center;
+  margin: 6px !important;
+}
+
+.footer h6{
+  margin-top: 0px !important;
+  text-align: right;
+}
