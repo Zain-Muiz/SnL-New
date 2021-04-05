@@ -1,5 +1,7 @@
 var myGamePiece;
 var myBackground;
+var myBanner;
+var gameover = false;
 
 // window.onload = window.onresize = function() {
 //   var canvas = document.getElementById('canvas');
@@ -11,7 +13,7 @@ function startGame() {
     myGamePiece = new component(40, 40, "assets/icon_player1.png", 0, 620, 0 , "image");
     myBackground = new component(700, 700, "assets/boards/boardmain.jpg", 0, 0, null, "image");
     myDice = new component(70,70,"assets/dice1.jpg",620,720, null, "image");
-    mytest= new component(10,10,"blue",20,20,null,"shape")
+    myBanner= new component(520,126,"",0,740,null,"image");
     
     //myGameArea.start();
 }
@@ -24,6 +26,8 @@ $(window).on('load resize', function () {
   if(wwidth<700){
   myBackground.width = 700;
   myBackground.height = 700;
+  myBanner.x = 90;
+  myBanner.y = 267;
   myGameArea.start();
   }
   if(wwidth>700){
@@ -32,6 +36,8 @@ $(window).on('load resize', function () {
   myGamePiece.y = 540;
   myDice.x = 620;
   myDice.y = 530;
+  myBanner.x = 40;
+  myBanner.y = 217;
   myGameArea.start();
   }
 
@@ -65,10 +71,6 @@ var myGameArea = {
         var persquare = width - allsquare;
         var permove = persquare / 10  ;
         console.log(widthbuff);
-        // console.log(widthstart);
-        // console.log(allsquare);
-        // console.log(persquare);
-        // console.log(permove);
 //        for (var y = myBackground.height - 70; y >= 43; y-=61.4) {
         for (var y = width - widthbuff; y >= widthstart; y-=permove) {
           let row = [];        
@@ -131,14 +133,16 @@ var myGameArea = {
         let stopcallback = false;
         this.canvas.addEventListener('click', async(e) => {
           if(!stopcallback){
-            stopcallback = true;
+            //stopcallback = true;
             const pos = {
                  x: e.clientX,
                  y: e.clientY
                };
                //console.log("this is" + pos.x , pos.y);
                  if (isIntersect(pos, myDice)) {
-                   await rollDie(newboard);
+                   let roll = await rollDie(newboard);
+                   await new Promise(resolve => setTimeout(resolve,750));
+                   await move(roll,newboard);
                    //alert('click on dice');
                  };
             stopcallback = false;
@@ -160,12 +164,6 @@ function component(width, height, color, x, y, playerpos, type) {
         this.image = new Image();
         this.image.src = color;
     }
-    if (type == "image1") {
-        this.image = new Image();
-        this.image.src = color;
-        //this.image.style = "border: 2px solid";
-    }
-    
     this.width = width;
     this.height = height;
     this.speedX = 0;
@@ -199,18 +197,25 @@ function updateGameArea() {
     myGamePiece.update();
     myDice.newPos();
     myDice.update();
+    myBanner.newPos();
+    myBanner.update();
 }
 
 function move(roll,newboard) {
-  new Promise(async(resolve,reject) =>{ 
+  return new Promise(async(resolve,reject) =>{ 
     //myDice.image.src = "assets/icon_dice.png";
     if (roll ) {//myGamePiece.speedX = 1;
         //console.log(board);
         newCords = []; 
         let oldPos = myGamePiece.playerpos;
         let newPos = myGamePiece.playerpos + roll;
-        if(newPos > 100){
+        if( newPos > 100){
+          if(oldPos == 100){
+            push_status(0,"Game Over. Click Play Again.");
+          }
+          else{
           push_status(0,"No Move. Try Again");
+          }
           newPos = oldPos;
         }
         let diff = newPos - oldPos;
@@ -239,20 +244,18 @@ function move(roll,newboard) {
           
         
         
-        checkSnakeorLadder(newboard);
-        //console.log(myGamePiece.x);
+        await checkSnakeorLadder(newboard);
+        resolve();
         }});
     updateGameArea();
 }
 
 function clearmove() {
-    //myGamePiece.image.src = "smiley.gif";
     myGamePiece.speedX = 0; 
     myGamePiece.speedY = 0; 
 }
 
 function isIntersect(pos, myDice) {
-   // console.log("hey");
    var diceroll = new Audio('dice.mp3');
      console.log("pos y",pos.y);
      console.log("dice y", myDice.y);
@@ -286,8 +289,7 @@ function isIntersect(pos, myDice) {
   
   function rollDie(newboard) {
     let stopcallback = false;
-      //console.log(board);
-    new Promise(async(resolve,reject) =>{ 
+    return new Promise(async(resolve,reject) =>{ 
     if(!stopcallback){ 
     stopcallback = true;
     const max = 6;
@@ -297,7 +299,8 @@ function isIntersect(pos, myDice) {
     console.log(newdice);
     myDice.image.src = newdice;
     await new Promise(resolve => setTimeout(resolve,750));
-    await move(roll,newboard);
+    resolve(roll);
+   // await move(roll,newboard);
     stopcallback = false;}
     })
     
@@ -309,60 +312,47 @@ function isIntersect(pos, myDice) {
     const ladders = [
       {
       start: 3,
-      end: 60,
-      message: "വോട്ടര്‍ പട്ടികയില്‍ ഞാന്‍ പേര്‌ ചേര്‍ത്തിട്ടുണ്ട്‌."
+      end: 60
 
     },{
       start: 6,
-      end: 27,
-      message:"വോട്ടവകാശത്തെക്കുറിച്ച്‌ ഞാന്‍ മറ്റുള്ളവരെ ബോധവത്ക്കരിക ്കും"
+      end: 27
     },{
       start: 11,
-      end: 70,
-      message:" വോട്ടവകാശം വിനിയോഗിക്കുന്നതുമായി ബന്ധപ്പെട്ട്‌ എന്തെങ്കിലും സംശയമുണ്ടെങ്കില്‍ ഞാന്‍ 1950 എന്ന നമ്പരില്‍ ബന്ധപ്പെടും"
+      end: 70
     },{
       start: 35,
-      end: 56,
-      message: "എന്തെങ്കിലും ക്രമക്കേട്‌ കണ്ടെത്തിയാല്‍ ഉടന്‍ തന്നെ ബസ്ധപ്പെട്ട അധികാരികളെ ഞാന്‍ അറിയികകും"
+      end: 56
       
     },{
       start: 63,
-      end: 96,
-      message: "എന്റെ സഹപ്രവര്‍ത്തകരെ വോട്ടര്‍ പട്ടികയില്‍ പേരു ചേര്‍ക്കാന്‍ ഞാന്‍ സഹായിക ്കും"
+      end: 96
     },{
       start:68,
-      end: 93,
-      message: "കോവിഡ്‌ മാനദണ്ഡങ്ങള്‍ പാലിച്ചുകൊണ്ടു മാത്രമേ ഞാന്‍ വോട്ടുചെയൂ"
+      end: 93
     },
       {
       start: 37,
-      end: 1,
-      message:"മുതിര്‍ന്നവര്‍, ഭിന്നശേഷിക്കാര്‍, സ്ത്രീകള്‍ എന്നിവര്‍ക്ക്‌ ക്യൂവില്‍ നില്‍ക്കാതെ വോട്ട്‌ ചെയ്യുന്നതിന്‌ ഞാന്‍ മുന്‍ഗണന നല്‍കും"
+      end: 1
     },{
       start: 25,
-      end: 5,
-      message:""
+      end: 5
     },{
       start: 47,
-      end: 12,
-      message:""
+      end: 12
     },{
       start: 65,
-      end: 59,
-      message:""
+      end: 59
     },{
       start: 82,
-      end: 61,
-      message:""
+      end: 61
     },{
       start:87,
-      end: 54,
-      message:""
+      end: 54
     }
     ,{
       start:89,
-      end: 69,
-      message:""
+      end: 69
     }
   ];
   var laddersound = new Audio('Laddersound.mp3');
@@ -374,63 +364,74 @@ function isIntersect(pos, myDice) {
       console.log("You stepped on a ladder!");
       if(ladder.start> ladder.end){
       snakesound.play();
-      push_status(0, "Snake");
+      myBanner.image.src = "assets/sndl"+ ladder.start + ".png";
+      setTimeout(function () {
+        myBanner.image.src = "";
+    }, 2000);
+      
       }
       if(ladder.start < ladder.end){
       laddersound.play();
-      push_status(1, "Ladder");
+      myBanner.image.src = "assets/sndl"+ ladder.start + ".png";
+      setTimeout(function () {
+        myBanner.image.src = "";
+    }, 2000);
+      
       }
       myGamePiece.playerpos = ladder.end;
       for( let tiles of newboard){
         for( let tile of tiles){
             if(tile.position == myGamePiece.playerpos){
                 ladCords.push(tile);
-                //console.log(newCords);
+                console.log(newCords);
             }
         }
     }
     myGamePiece.x = ladCords[0].x + 10.2  ;
     myGamePiece.y = ladCords[0].y - 29.3;
+    console.log(myGamePiece.y);
     }
   });
   
   
-  if (myGamePiece.playerpos === 100) {
-    push_status(1, "Player has won!");
-    console.log("Player has won!");
-    hasWon = true;
+  if (!gameover && myGamePiece.playerpos === 100) {
+    myBanner.image.src = "assets/sndl"+ myGamePiece.playerpos + ".png";
+    var btn = document.createElement("BUTTON");   // Create a <button> element
+    btn.innerHTML = "PLAY AGAIN"  ;
+    btn.onclick = playagain;                 // Insert text
+    document.body.appendChild(btn); 
+    gameover = true;
   }
 
   }
 
   
-function push_status(status_code, message) {
-  let root = document.getElementById("status_msg");
-  root.className = "snackbar";
-  root.innerHTML = "";
-  let a =document.createElement("img");
-  //a = new Image();
-  //a.src = "assets/item_status_1.png";
-  //root.appendChild(a);
+  function push_status(status_code, message) {
+    let root = document.getElementById("status_msg");
+    root.className = "snackbar";
+    root.innerHTML = "";
+    let p = document.createElement("p");
+    p.className = "empty";
+    p.innerHTML = message;
 
-  let p = document.createElement("p");
-  p.class = "empty";
-  p.innerHTML = message;
+    if (status_code === 0) {
+        let b = document.createElement("b");
+        b.innerHTML = "Oh No! ";
+        b.style.color = "red";
+        root.appendChild(b);
+    } else if (status_code === 1) {
+        let b = document.createElement("b");
+        // let p = document.createElement("p");
+        b.innerHTML = "SUCCESS: ";
+        b.style.color = "green";
+        root.appendChild(b);
+    }
+    root.appendChild(p);
+    setTimeout(function () {
+        root.className = "nothing";
+    }, 1000);
+}
 
-  if (status_code === 0) {
-      let b = document.createElement("b");
-      b.innerHTML = " Oh No! ";
-      b.style.color = "red";
-      root.appendChild(b);
-  } else if (status_code === 1) {
-      let b = document.createElement("b");
-      // let p = document.createElement("p");
-      b.innerHTML = "YAY! ";
-      b.style.color = "green";
-      root.appendChild(b);
-  }
-  root.appendChild(p);
-  setTimeout(function () {
-      root.className = "nothing";
-  }, 100000);
+function playagain(){
+   window.location.reload();
 }
