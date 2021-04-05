@@ -11,7 +11,7 @@ var gameover = false;
 
 function startGame() {
     myGamePiece = new component(40, 40, "assets/icon_player1.png", 0, 620, 0 , "image");
-    myBackground = new component(700, 700, "assets/boards/boardmain.jpg", 0, 0, null, "image");
+    myBackground = new component(700, 700, "Boardnew.jpeg", 0, 0, null, "image");
     myDice = new component(70,70,"assets/dice1.jpg",620,720, null, "image");
     myBanner= new component(520,126,"",0,740,null,"image");
     
@@ -21,7 +21,7 @@ function startGame() {
 $(window).on('load resize', function () {
  // console.log("hey");
   window.wwidth = $(window).width();
-  var wheight = $(window).height();
+  window.wheight = $(window).height();
   startGame();
   if(wwidth<700){
   myBackground.width = 700;
@@ -55,7 +55,7 @@ var myGameArea = {
         
         var width = myBackground.width;  // also height
         this.canvas.width = 700;
-        this.canvas.height = 900;
+        this.canvas.height = 800;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
@@ -186,7 +186,8 @@ function component(width, height, color, x, y, playerpos, type) {
     this.newPos = function() {
         this.x += this.speedX;
         this.y += this.speedY;        
-    }    
+    }   
+    
 }
 
 function updateGameArea() {
@@ -263,7 +264,15 @@ function isIntersect(pos, myDice) {
      console.log("dice x", myDice.x);
     if(myBackground.width >600){
       console.log("mobile");
-      if (pos.x > myDice.x && pos.x < myDice.x + 70 && pos.y >myDice.y && pos.y < myDice.y+70){
+      var finalheight;
+      if(window.wwidth<454){
+      hieghtbuffer = window.wheight/100;
+      finalheight = 33 * hieghtbuffer;
+      }
+      else{
+        finalheight = 0;
+      }
+      if (pos.x > myDice.x && pos.x < myDice.x + 70 && pos.y >myDice.y+finalheight && pos.y < myDice.y+70+finalheight){
         diceroll.play();  
         return true;
           

@@ -1,5 +1,6 @@
 body{
   overflow: hidden;
+  background-image: url("assets/background.png");
 }
 
 button{
@@ -25,7 +26,8 @@ button{
     left: 0;
     right: 0;
     margin:auto;
-    border: 2px solid;
+    background-color: white ;
+    border-radius: 5px;
 }
 
 .snackbar {
@@ -57,5 +59,10 @@ button{
     width: 700px;
     height: 100px;
 
+  }}
+  @media only screen and (max-width: 454px){
+  canvas{
+    border-radius: 0;
+    top: 33%
   }
 }
