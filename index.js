@@ -70,14 +70,14 @@ var myGameArea = {
         var allsquare = 2 * widthstart;
         var persquare = width - allsquare;
         var permove = persquare / 10  ;
-        console.log(widthbuff);
+        //console.log(widthbuff);
 //        for (var y = myBackground.height - 70; y >= 43; y-=61.4) {
         for (var y = width - widthbuff; y >= widthstart; y-=permove) {
           let row = [];        
           board.push(row);
 //          for (var x = 43; x < myBackground.width - 70; x+=61.4) {
           for (var x = widthstart; x < width - widthbuff; x+=permove) {
-            console.log("jjjj")
+            //console.log("jjjj")
             
             if(count <= 10){
               if(check){
@@ -109,7 +109,7 @@ var myGameArea = {
         let newcount = 1;
         let newboard = [];
         for(let tiles of board ){
-          console.log(tiles.length);
+         // console.log(tiles.length);
 
           if(newcount % 2 == 1){
             newboard.push(tiles);
@@ -118,7 +118,7 @@ var myGameArea = {
           if(newcount % 2 == 0){
             
             let temp = [];
-            console.log(tiles.length);
+            //console.log(tiles.length);
             for (i=0;i<tiles.length;i++){
               //console.log(tiles[tiles.length -1 -i]);
             temp.push(tiles[tiles.length -1 -i]);
@@ -128,12 +128,12 @@ var myGameArea = {
           }
           newcount++;
         }
-        console.log(newboard);
-        console.log(board)
+        //console.log(newboard);
+        //console.log(board)
         let stopcallback = false;
         this.canvas.addEventListener('click', async(e) => {
           if(!stopcallback){
-            //stopcallback = true;
+            stopcallback = true;
             const pos = {
                  x: e.clientX,
                  y: e.clientY
@@ -221,14 +221,14 @@ function move(roll,newboard) {
         }
         let diff = newPos - oldPos;
         myGamePiece.playerpos = newPos;
-        console.log("oldp",oldPos);
-        console.log("newp",newPos);
+        //console.log("oldp",oldPos);
+        //console.log("newp",newPos);
         for( let tiles of newboard){
             for( let tile of tiles){
                 if(oldPos < tile.position){
                   if( tile.position <= newPos){
                     newCords.push(tile);
-                    console.log(newCords);
+                    //console.log(newCords);
                 }}
             }
           }
@@ -236,7 +236,7 @@ function move(roll,newboard) {
         var movepiecesound = new Audio('movepiece' + roll + '.mp3');
            
             for(i=0; i < newCords.length; i++){
-              console.log("hey");
+              //console.log("hey");
               myGamePiece.x = newCords[i].x + 10.2  ;
               myGamePiece.y = newCords[i].y - 29.3;
               movepiecesound.play();
@@ -258,12 +258,12 @@ function clearmove() {
 
 function isIntersect(pos, myDice) {
    var diceroll = new Audio('dice.mp3');
-     console.log("pos y",pos.y);
-     console.log("dice y", myDice.y);
-     console.log("pos x", pos.x);
-     console.log("dice x", myDice.x);
+     //console.log("pos y",pos.y);
+     //console.log("dice y", myDice.y);
+     //console.log("pos x", pos.x);
+     //console.log("dice x", myDice.x);
     if(myBackground.width >600){
-      console.log("mobile");
+      //console.log("mobile");
       var finalheight;
       if(window.wwidth<454){
       hieghtbuffer = window.wheight/100;
@@ -282,7 +282,7 @@ function isIntersect(pos, myDice) {
       }
     }
     else if(myBackground.width<=600){
-      console.log("desk");
+      //console.log("desk");
       extracanvasspace = window.wwidth - 700;
       precanvasbuff = extracanvasspace / 2 ; 
       if (pos.x > myDice.x + precanvasbuff && pos.x < myDice.x + precanvasbuff + 70 && pos.y >myDice.y && pos.y < myDice.y+70){
@@ -303,9 +303,9 @@ function isIntersect(pos, myDice) {
     stopcallback = true;
     const max = 6;
     const roll = Math.ceil(Math.random() * max);
-    console.log("You rolled", roll);
+    //console.log("You rolled", roll);
     newdice = "assets/dice"+ roll + ".jpg";
-    console.log(newdice);
+    //console.log(newdice);
     myDice.image.src = newdice;
     await new Promise(resolve => setTimeout(resolve,750));
     resolve(roll);
@@ -370,13 +370,13 @@ function isIntersect(pos, myDice) {
     //console.log(myGamePiece.playerpos)
     ladCords = [];
     if (ladder.start === myGamePiece.playerpos) {
-      console.log("You stepped on a ladder!");
+      //console.log("You stepped on a ladder!");
       if(ladder.start> ladder.end){
       snakesound.play();
       myBanner.image.src = "assets/sndl"+ ladder.start + ".png";
       setTimeout(function () {
         myBanner.image.src = "";
-    }, 2000);
+    }, 4000);
       
       }
       if(ladder.start < ladder.end){
@@ -384,7 +384,7 @@ function isIntersect(pos, myDice) {
       myBanner.image.src = "assets/sndl"+ ladder.start + ".png";
       setTimeout(function () {
         myBanner.image.src = "";
-    }, 2000);
+    }, 4000);
       
       }
       myGamePiece.playerpos = ladder.end;
@@ -392,13 +392,13 @@ function isIntersect(pos, myDice) {
         for( let tile of tiles){
             if(tile.position == myGamePiece.playerpos){
                 ladCords.push(tile);
-                console.log(newCords);
+                //console.log(newCords);
             }
         }
     }
     myGamePiece.x = ladCords[0].x + 10.2  ;
     myGamePiece.y = ladCords[0].y - 29.3;
-    console.log(myGamePiece.y);
+    //console.log(myGamePiece.y);
     }
   });
   
